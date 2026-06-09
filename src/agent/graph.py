@@ -21,4 +21,6 @@ builder.add_conditional_edges(
 builder.add_edge("tool_node", "llm_call")
 
 # 4. 编译图（全局单例智能体）
-agent = builder.compile()
+agent = builder.compile(
+    name="calculator_agent"
+)

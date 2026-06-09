@@ -26,11 +26,10 @@ async def chat(req: QueryRequest):
     # 组装用户消息
     inputs = {
         "messages": [HumanMessage(content=req.question)],
-        "llm_calls": 0
     }
     print(inputs)
-    # 执行智能体
-    result =  await asyncio.to_thread(agent.invoke, inputs)
+    # 执行智能体try:
+    result = await agent.ainvoke(inputs)
     print(result)
     # 格式化返回（只对外暴露可读内容）
     resp_messages = []
