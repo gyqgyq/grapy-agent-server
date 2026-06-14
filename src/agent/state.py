@@ -1,14 +1,13 @@
 import operator
 from dataclasses import dataclass
-from typing_extensions import TypedDict, Annotated
+from typing_extensions import TypedDict, Annotated, NotRequired
 
 from langchain.messages import AnyMessage
 
 
-
 class MessagesState(TypedDict):
     messages: Annotated[list[AnyMessage], operator.add]
-    llm_calls: int
+    llm_calls: NotRequired[int]
 
 
 @dataclass
