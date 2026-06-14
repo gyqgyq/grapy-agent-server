@@ -50,7 +50,7 @@ async def llm_call(state: MessagesState, runtime: Runtime[MemoryContext]):
     }
 
 def tool_node(state: dict):
-    """Performs the tool call"""
+    """执行 LLM 返回的工具调用。"""
 
     result = []
     for tool_call in state["messages"][-1].tool_calls:

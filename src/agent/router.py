@@ -1,8 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
 from langchain.messages import HumanMessage
 
-from src.agent.graph import agent
 from src.agent.state import MemoryContext
 
 router = APIRouter(prefix="/agent", tags=["agent"])
@@ -22,17 +21,16 @@ async def health():
     }
 
 @router.post("/chat")
-async def chat(req: QueryRequest):
+async def chat(req: QueryRequest, request: Request):
     """计算器智能体对话接口"""
-    # 组装用户消息
     inputs = {
         "messages": [HumanMessage(content=req.question)],
     }
     config = {"configurable": {"thread_id": req.thread_id}}
-    result = await agent.ainvoke(
-        inputs, 
+    result = await request.app.state.agent.ainvoke(
+        inputs,
         config,
-        context=MemoryContext(user_id=req.user_id)
+        context=MemoryContext(user_id=req.user_id),
     )
     # 格式化返回（只对外暴露可读内容）
     resp_messages = []

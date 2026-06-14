@@ -3,33 +3,33 @@ from langchain.tools import tool
 # Define tools
 @tool
 def multiply(a: int, b: int) -> int:
-    """Multiply `a` and `b`.
+    """计算 `a` 与 `b` 的乘积。
 
     Args:
-        a: First int
-        b: Second int
+        a: 第一个整数
+        b: 第二个整数
     """
     return a * b
 
 
 @tool
 def add(a: int, b: int) -> int:
-    """Adds `a` and `b`.
+    """计算 `a` 与 `b` 的和。
 
     Args:
-        a: First int
-        b: Second int
+        a: 第一个整数
+        b: 第二个整数
     """
     return a + b
 
 
 @tool
 def divide(a: int, b: int) -> float:
-    """Divide `a` and `b`.
+    """计算 `a` 除以 `b` 的商。
 
     Args:
-        a: First int
-        b: Second int
+        a: 被除数
+        b: 除数
     """
     return a / b
 
