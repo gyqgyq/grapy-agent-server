@@ -1,14 +1,13 @@
-import logging
-
 from langchain.messages import AnyMessage, SystemMessage, ToolMessage
 from langgraph.runtime import Runtime
 
 from src.agent.config import llm
 from src.agent.tools import tools, tools_by_name
 from src.agent.state import MessagesState, MemoryContext
+from src.core.logging import get_logger
 from src.core.settings import settings
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 model_with_tools = llm.bind_tools(tools)
 

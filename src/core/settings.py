@@ -19,6 +19,11 @@ class Settings:
     MEMORY_VALUE_KEY: str = os.getenv("MEMORY_VALUE_KEY", "memory")
     MEMORY_MAX_CHARS: int = int(os.getenv("MEMORY_MAX_CHARS", "2000"))
     MEMORY_SEARCH_LIMIT: int = int(os.getenv("MEMORY_SEARCH_LIMIT", "3"))
+    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+    LOG_FORMAT: str = os.getenv(
+        "LOG_FORMAT",
+        "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    )
 
 
 settings = Settings()

@@ -5,9 +5,12 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from src.core.logging import setup_logging
 from src.agent.graph import build_agent
 from src.api.routers import router
 from src.db.postgres import postgres_persistence
+
+setup_logging()
 
 
 def selector_loop_factory() -> asyncio.AbstractEventLoop:

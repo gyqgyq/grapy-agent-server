@@ -1,4 +1,3 @@
-import logging
 from contextlib import asynccontextmanager
 
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
@@ -7,9 +6,10 @@ from psycopg import InterfaceError, OperationalError
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
+from src.core.logging import get_logger
 from src.core.settings import settings
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class PostgresPersistenceError(RuntimeError):
