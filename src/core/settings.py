@@ -19,6 +19,18 @@ class Settings:
     MEMORY_VALUE_KEY: str = os.getenv("MEMORY_VALUE_KEY", "memory")
     MEMORY_MAX_CHARS: int = int(os.getenv("MEMORY_MAX_CHARS", "2000"))
     MEMORY_SEARCH_LIMIT: int = int(os.getenv("MEMORY_SEARCH_LIMIT", "3"))
+    MEMORY_EMBEDDING_MODEL: str = os.getenv("MEMORY_EMBEDDING_MODEL", "")
+    MEMORY_EMBEDDING_DIMS: int = int(os.getenv("MEMORY_EMBEDDING_DIMS", "1536"))
+    MEMORY_EMBEDDING_API_KEY: str = os.getenv(
+        "MEMORY_EMBEDDING_API_KEY", os.getenv("AGENT_CHAT_API_KEY", "")
+    )
+    MEMORY_EXTRACT_PROMPT: str = os.getenv(
+        "MEMORY_EXTRACT_PROMPT",
+        "从对话中提取值得长期记住的用户信息（如姓名、偏好、常用习惯等）。"
+        "不要记录具体的算术题目和计算结果。"
+        "若无新信息，只输出 JSON 数组：[]。"
+        "否则输出 JSON 数组，每项为一条简短中文事实字符串。只输出 JSON，不要其他文字。",
+    )
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     LOG_FORMAT: str = os.getenv(
         "LOG_FORMAT",

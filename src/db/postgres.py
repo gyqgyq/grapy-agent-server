@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
 
+from langchain.embeddings import init_embeddings
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph.store.postgres.aio import AsyncPostgresStore
+from langgraph.store.postgres.base import PostgresIndexConfig
 from psycopg import InterfaceError, OperationalError
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
@@ -21,6 +23,28 @@ def normalize_database_url(url: str) -> str:
     if separator and scheme.startswith("postgresql+"):
         return f"postgresql://{rest}"
     return url
+
+
+def build_store_index() -> PostgresIndexConfig | None:
+    """构建 Store 向量索引配置；未配置 embedding 模型时返回 None。"""
+    model = settings.MEMORY_EMBEDDING_MODEL.strip()
+    if not model:
+        logger.info(
+            "未配置 MEMORY_EMBEDDING_MODEL，Store 语义检索已禁用。"
+            "可在 .env 中设置，例如 openai:text-embedding-3-small"
+        )
+        return None
+
+    embed_kwargs: dict = {}
+    if settings.MEMORY_EMBEDDING_API_KEY:
+        embed_kwargs["api_key"] = settings.MEMORY_EMBEDDING_API_KEY
+
+    embeddings = init_embeddings(model, **embed_kwargs)
+    return PostgresIndexConfig(
+        embed=embeddings,
+        dims=settings.MEMORY_EMBEDDING_DIMS,
+        fields=[settings.MEMORY_VALUE_KEY],
+    )
 
 
 def get_database_url() -> str:
@@ -72,7 +96,7 @@ class PostgresPersistence:
 
         try:
             await pool.open(wait=True)
-            store = AsyncPostgresStore(conn=pool)
+            store = AsyncPostgresStore(conn=pool, index=build_store_index())
             checkpointer = AsyncPostgresSaver(conn=pool)
             await store.setup()
             await checkpointer.setup()

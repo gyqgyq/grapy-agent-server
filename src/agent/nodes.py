@@ -3,7 +3,8 @@ from langgraph.runtime import Runtime
 
 from src.agent.config import llm
 from src.agent.tools import tools, tools_by_name
-from src.agent.state import MessagesState, MemoryContext
+from src.agent.memory import memory_namespace, should_load_cross_thread_memory
+from src.agent.state import MemoryContext, MessagesState
 from src.core.logging import get_logger
 from src.core.settings import settings
 
@@ -57,8 +58,11 @@ async def llm_call(state: MessagesState, runtime: Runtime[MemoryContext]):
     messages = state.get("messages") or []
     latest_msg = str(messages[-1].content) if messages else ""
 
-    namespace = (runtime.context.user_id, "memories")
-    memory_text = await _load_memory_text(runtime, namespace, latest_msg)
+    memory_text = ""
+    if should_load_cross_thread_memory(messages):
+        namespace = memory_namespace(runtime.context.user_id)
+        memory_text = await _load_memory_text(runtime, namespace, latest_msg)
+
     system_prompt = _build_system_prompt(memory_text)
 
     response = await model_with_tools.ainvoke(
