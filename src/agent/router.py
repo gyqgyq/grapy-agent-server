@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 from langchain.messages import HumanMessage
@@ -12,6 +14,7 @@ class QueryRequest(BaseModel):
     thread_id: str
     user_id: str
 
+
 @router.get("/health")
 async def health():
     """健康检查接口"""
@@ -19,6 +22,16 @@ async def health():
         "success": True,
         "message": "OK"
     }
+
+
+@router.post("/session")
+async def create_session():
+    """创建新会话，返回 thread_id 供 /chat 续聊使用。"""
+    return {
+        "success": True,
+        "thread_id": str(uuid.uuid4()),
+    }
+
 
 @router.post("/chat")
 async def chat(req: QueryRequest, request: Request):
